@@ -39,6 +39,7 @@
 
             <Button
                 android:id="@+id/button"
+                style="@style/Widget.AppCompat.Button"
                 android:layout_width="250sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -58,6 +59,13 @@
                 android:onClick="onClickRegistrarse"
                 android:text="Registrarse"
                 android:textColor="@android:color/white" />
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_height="wrap_content"
+                android:layout_width="250sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="30dp" />
         </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
