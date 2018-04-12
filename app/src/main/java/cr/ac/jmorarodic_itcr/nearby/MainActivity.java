@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
     public void onClickRegistrarse(View view)
     {
         //intent
-        Log.i("Registro","RegistroApp");
+        Intent intent = new Intent(this,RegistrarActivity.class);
+        startActivity(intent);
         /*
         CharSequence opciones[] = new CharSequence[] {"Ingresar con la aplicación", "Facebook"};
 

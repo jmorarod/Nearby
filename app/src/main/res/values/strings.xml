@@ -5,6 +5,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Usuario</string>
     <string name="prompt_password">Contraseña</string>
+    <string name="prompt_confirm_password">Confirmar Contraseña</string>
     <string name="action_sign_in">Ingresar</string>
     <string name="action_face_book_sign_in">Facebook</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -17,4 +18,15 @@
     </string>
     <string name="facebook_app_id">362369837593618</string>
     <string name="fb_login_protocol_scheme">fb362369837593618</string>
-    </resources>
+    <string name="title_activity_registrar">RegistrarActivity</string>
+
+    <string name="prompt_correo">Correo</string>
+
+    <string-array name="Genero">
+        <item>Femenino</item>
+        <item>Masculino</item>
+        <item>Otro</item>
+        <item>No especificar</item>
+    </string-array>
+
+</resources>

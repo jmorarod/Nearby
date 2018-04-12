@@ -89,16 +89,6 @@
                 android:background="@color/colorPrimary"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
-            <Button
-                android:id="@+id/facebook_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_face_book_sign_in"
-                android:background="@color/colorPrimary"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"/>
 
         </LinearLayout>
     </ScrollView>
