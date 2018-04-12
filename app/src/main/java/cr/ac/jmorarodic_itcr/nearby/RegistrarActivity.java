@@ -40,7 +40,7 @@ public class RegistrarActivity extends AppCompatActivity {
             if(correo != "" && password != "" && confirmPassword != "" && genero != "" && fecha != "0/0/0") {
                 //TODO: Registrar en backend
                 Log.i("usuario", correo + " " + password + " " + genero + " " + fecha);
-                Intent intent = new Intent(this, EventActivity.class);
+                Intent intent = new Intent(this, CategoriasActivity.class);
                 startActivity(intent);
             }else{
                 Toast.makeText(this,"Debe llenar todos los campos",Toast.LENGTH_SHORT).show();

@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
+                //TODO: datos de facebook pasarlos por el intent o guardarlos en shared preferences
+                Intent intent = new Intent(MainActivity.this, RegistrarActivity.class);
+                startActivity(intent);
             }
 
             @Override

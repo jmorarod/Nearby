@@ -22,6 +22,8 @@
     <string name="title_activity_registrar">Registro</string>
 
     <string name="prompt_correo">Correo</string>
+    <string name="TextSeleccioneCategorias">Seleccione las categorias que le interesan</string>
+    <string name="TextSeleccioneSubCategorias">Seleccione las subcategorias que le interesan</string>
 
     <string-array name="Genero">
         <item>Femenino</item>

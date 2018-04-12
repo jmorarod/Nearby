@@ -55,8 +55,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cr.ac.jmorarodic_itcr.nearby.MainActivity" />
         </activity>
-        <activity android:name=".EventActivity"></activity>
-
+        <activity android:name=".EventActivity" />
+        <activity android:name=".CategoriasActivity" />
+        <activity android:name=".SubcategoriasActivity"></activity>
     </application>
 
 </manifest>
