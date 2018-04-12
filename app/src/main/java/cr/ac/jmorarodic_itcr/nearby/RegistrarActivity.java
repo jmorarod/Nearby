@@ -1,10 +1,12 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -38,6 +40,8 @@ public class RegistrarActivity extends AppCompatActivity {
             if(correo != "" && password != "" && confirmPassword != "" && genero != "" && fecha != "0/0/0") {
                 //TODO: Registrar en backend
                 Log.i("usuario", correo + " " + password + " " + genero + " " + fecha);
+                Intent intent = new Intent(this, EventActivity.class);
+                startActivity(intent);
             }else{
                 Toast.makeText(this,"Debe llenar todos los campos",Toast.LENGTH_SHORT).show();
             }
