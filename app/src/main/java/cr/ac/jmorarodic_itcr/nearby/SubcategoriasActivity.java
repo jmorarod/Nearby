@@ -1,6 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,8 @@ public class SubcategoriasActivity extends AppCompatActivity {
 
     public void onClickContinuar(View view){
         //TODO: crear Usuario
+        SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean("logged",true).apply();
         Intent intent = new Intent(this,IndexActivity.class);
         startActivity(intent);
     }

@@ -2,6 +2,7 @@ package cr.ac.jmorarodic_itcr.nearby;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -62,7 +63,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callbackManager = CallbackManager.Factory.create();
-
+        //TODO: ver si está logueado, si no
+        SharedPreferences sharedPreferences = this.getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        //Quitar comentario de la siguiente linea para quitar la sesión
+        //sharedPreferences.edit().putBoolean("logged",false).apply();
+        if(sharedPreferences.getBoolean("logged",false)){
+            Intent intent = new Intent(MainActivity.this,IndexActivity.class);
+            startActivity(intent);
+        }else{
+            sharedPreferences.edit().putBoolean("logged",false).apply();
+        }
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
@@ -89,8 +99,9 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
                 //TODO: datos de facebook pasarlos por el intent o guardarlos en shared preferences
-                Intent intent = new Intent(MainActivity.this, RegistrarActivity.class);
-                startActivity(intent);
+                //TODO: verificar si existe la cuenta, si existe el intent es a la pantalla principal, si no entonces:
+                //Intent intent = new Intent(MainActivity.this, RegistrarActivity.class);
+                //startActivity(intent);
             }
 
             @Override
