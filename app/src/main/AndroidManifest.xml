@@ -23,7 +23,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".IndexActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,6 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cr.ac.jmorarodic_itcr.nearby.MainActivity" />
         </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".EventActivity" />
         <activity android:name=".CategoriasActivity" />
         <activity android:name=".SubcategoriasActivity"></activity>
