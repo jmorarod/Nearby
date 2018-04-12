@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+<item
+    android:id="@+id/tab_home"
+    android:enabled="true"
+    android:icon="@drawable/ic_home"
+    android:title="Inicio"
+    app:showAsAction="ifRoom"
+    />
+
+    <item
+        android:id="@+id/tab_group"
+        android:enabled="true"
+        android:icon="@drawable/ic_group"
+        android:title="Grupos"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/tab_calendar"
+        android:enabled="true"
+        android:icon="@drawable/ic_calendar"
+        android:title="Calendario"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/tab_notification"
+        android:enabled="true"
+        android:icon="@drawable/ic_notification"
+        android:title="Notificaciones"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/tab_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile"
+        android:title="Perfil"
+        app:showAsAction="ifRoom"
+        />
+</menu>
