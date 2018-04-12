@@ -1,5 +1,6 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +15,8 @@ public class SubcategoriasActivity extends AppCompatActivity {
 
     public void onClickContinuar(View view){
         //TODO: crear Usuario
-        //TODO: intent
+        Intent intent = new Intent(this,IndexActivity.class);
+        startActivity(intent);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
