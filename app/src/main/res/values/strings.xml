@@ -18,6 +18,7 @@
     </string>
     <string name="facebook_app_id">362369837593618</string>
     <string name="fb_login_protocol_scheme">fb362369837593618</string>
+
     <string name="title_activity_registrar">RegistrarActivity</string>
 
     <string name="prompt_correo">Correo</string>
@@ -28,5 +29,6 @@
         <item>Otro</item>
         <item>No especificar</item>
     </string-array>
+
 
 </resources>
