@@ -1,6 +1,13 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.EventLog;
@@ -17,6 +24,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private float lat;
     private float lon;
+    private float userLat;
+    private float userLon;
+    LocationManager locationManager;
+    LocationListener locationListener;
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 0) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                }
+            }
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         //lat = intent.getFloatExtra(EventActivity.LAT);
         //lon = intent.getFloatExtra(EventActivity.LAT);
+        //userLat = intent.getFloatExtra(EventActivity.LAT);
+        //userLon = intent.getFloatExtra(EventActivity.LAT);
 
     }
 
@@ -50,5 +80,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng place = new LatLng(lat, lon);
         mMap.addMarker(new MarkerOptions().position(place).title("Lugar"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 0);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            //mMap.clear();
+
+            LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+        }
+        else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            //mMap.clear();
+
+            LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        }
     }
 }
