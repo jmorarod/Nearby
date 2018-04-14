@@ -60,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageEvent" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/imgStar"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
@@ -68,7 +68,7 @@
             app:layout_constraintEnd_toStartOf="@+id/txtPuntuacion"
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toBottomOf="@+id/imageEvent"
-            app:srcCompat="@drawable/star" />
+            app:srcCompat="@drawable/ic_star" />
 
         <TextView
             android:id="@+id/txtUsername"
@@ -120,7 +120,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:onClick="onMapClick"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -242,7 +241,6 @@
             app:srcCompat="@drawable/send" />
 
         <ListView
-            android:id="@+id/listViewComentarios"
             android:layout_width="368dp"
             android:layout_height="268dp"
             android:layout_marginEnd="8dp"
@@ -251,7 +249,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/listViewComentarios"/>
 
         <RatingBar
             android:id="@+id/ratingBar"

@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
  */
 
 public class CategoriaItem {
-    String nombre;
-    Bitmap imagen;
+    private String nombre;
+    private Bitmap imagen;
 
     public CategoriaItem(String nombre, Bitmap imagen) {
         this.nombre = nombre;

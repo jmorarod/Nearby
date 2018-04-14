@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -23,7 +26,22 @@ public class NotificationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false);
+       View RootView= inflater.inflate(R.layout.fragment_notification, container, false);
+        ArrayList<EventCalendarItem> eventos = new ArrayList<>();
+
+        for(int i =0; i<10;i++) {
+            EventCalendarItem e = new EventCalendarItem(R.drawable.sports, "Titulo de noticia", "14 Abril 2018");
+            eventos.add(e);
+        }
+
+        //Carga en listview
+        final ListView listView = (ListView) RootView.findViewById(R.id.notificationEventList);
+        EventCalendarAdapter eventMainAdapter = new EventCalendarAdapter(getActivity().getApplicationContext(),R.layout.list_item_event_calendar,eventos);
+        listView.setAdapter(eventMainAdapter);
+
+
+        return RootView;
+
     }
 
 }

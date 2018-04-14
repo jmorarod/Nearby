@@ -2,12 +2,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="cr.ac.jmorarodic_itcr.nearby.CalendarFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="hola calendar" />
+        android:orientation="vertical">
 
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_next"
+
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryLight"
+                android:fontFamily="@font/roboto_bold"
+                android:radius="50dp"
+                android:text="Asitir"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_interes"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Interes"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_previous"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+
+                android:background="@color/colorWhite"
+                android:fontFamily="@font/roboto_bold"
+                android:radius="50dp"
+                android:text="Pasados"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/calendarFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/linear">
+
+        </FrameLayout>
+
+    </RelativeLayout>
 </FrameLayout>

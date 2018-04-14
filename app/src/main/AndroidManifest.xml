@@ -31,7 +31,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".IndexActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -60,7 +60,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cr.ac.jmorarodic_itcr.nearby.MainActivity" />
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".IndexActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
