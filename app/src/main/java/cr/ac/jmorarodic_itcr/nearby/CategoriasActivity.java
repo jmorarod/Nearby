@@ -44,11 +44,10 @@ public class CategoriasActivity extends AppCompatActivity {
     ArrayList<CategoriaItem> categoriasItems;
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
-    APIRequester apiRequester;
+
     Bitmap bitmap;
     GridView gridView;
     StringRequest jsonRequest;
-    Document document;
     String api_key;
 
     public void onClickGrid(View view){

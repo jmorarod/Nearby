@@ -33,5 +33,6 @@
     </string-array>
     <string name="title_activity_maps">Lugar</string>
     <string name="url_listar_categorias">https://nearbyrestapi.herokuapp.com/restapi/api/categorias/listar?format=json</string>
+    <string name="url_listar_sub_categorias">https://nearbyrestapi.herokuapp.com/restapi/api/subcategorias/listar?format=json</string>
 
 </resources>

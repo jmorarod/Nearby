@@ -27,11 +27,13 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     private String[] mCategories;
     private Integer[] mImages;
     private Context mContext;
+    private Bitmap[] mImagesBitmaps;
 
-    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext) {
+    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext, Bitmap[] mImagesBitmaps) {
         this.mCategories = mCategories;
         this.mImages = mImages;
         this.mContext = mContext;
+        this.mImagesBitmaps = mImagesBitmaps;
     }
 
     @NonNull
@@ -49,7 +51,8 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         holder.name.setText(mCategories[position]);
-        holder.image.setImageResource(mImages[position]);
+        //holder.image.setImageResource(mImages[position]);
+        holder.image.setImageBitmap(mImagesBitmaps[position]);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
