@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imgEventCalendar"
+                android:id="@+id/imgItemProfile"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginEnd="8dp"
@@ -42,7 +42,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imgEventCalendar"
+                app:layout_constraintStart_toEndOf="@+id/imgItemProfile"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -56,7 +56,7 @@
                 android:textColor="@color/colorBlack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imgEventCalendar"
+                app:layout_constraintStart_toEndOf="@+id/imgItemProfile"
                 app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
 
         </android.support.constraint.ConstraintLayout>

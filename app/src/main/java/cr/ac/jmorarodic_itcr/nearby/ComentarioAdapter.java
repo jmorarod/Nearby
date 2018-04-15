@@ -28,7 +28,7 @@ public class ComentarioAdapter extends ArrayAdapter<ComentarioItem> {
 
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.grid_view_items, null);
+        v = inflater.inflate(R.layout.list_item_comment, null);
 
         ImageView imageView = v.findViewById(R.id.userImg);
         TextView userText = v.findViewById(R.id.userNameText);

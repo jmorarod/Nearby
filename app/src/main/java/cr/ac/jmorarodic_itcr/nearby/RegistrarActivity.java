@@ -1,7 +1,6 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,9 +39,6 @@ public class RegistrarActivity extends AppCompatActivity {
             String fecha = nMonth +"/"+nDay+"/"+nYear;
             if(correo != "" && password != "" && confirmPassword != "" && genero != "" && fecha != "0/0/0") {
                 //TODO: Registrar en backend
-                SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
-                //Cambiar el auth_token por el que devuelva el backend
-                sharedPreferences.edit().putString("auth_token","1989c65206b5914e24546536bd49ab084517f269").apply();
                 Log.i("usuario", correo + " " + password + " " + genero + " " + fecha);
                 Intent intent = new Intent(this, CategoriasActivity.class);
                 startActivity(intent);

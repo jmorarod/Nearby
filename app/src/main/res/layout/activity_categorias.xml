@@ -25,13 +25,7 @@
         <GridView
             android:id="@+id/gridViewCategorias"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:columnWidth="100dp"
-            android:gravity="center"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
+            android:layout_height="400dp" />
 
         <Button
             android:id="@+id/btnContinuar"

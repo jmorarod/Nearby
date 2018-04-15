@@ -2,6 +2,7 @@ package cr.ac.jmorarodic_itcr.nearby;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -27,13 +28,11 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     private String[] mCategories;
     private Integer[] mImages;
     private Context mContext;
-    private Bitmap[] mImagesBitmaps;
 
-    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext, Bitmap[] mImagesBitmaps) {
+    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext) {
         this.mCategories = mCategories;
         this.mImages = mImages;
         this.mContext = mContext;
-        this.mImagesBitmaps = mImagesBitmaps;
     }
 
     @NonNull
@@ -51,8 +50,7 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         holder.name.setText(mCategories[position]);
-        //holder.image.setImageResource(mImages[position]);
-        holder.image.setImageBitmap(mImagesBitmaps[position]);
+        holder.image.setImageResource(mImages[position]);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +69,7 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
    {
        ImageView image;
        TextView name;
+
 
        public ViewHolder(View itemView) {
            super(itemView);

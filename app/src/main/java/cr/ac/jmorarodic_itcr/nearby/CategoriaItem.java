@@ -9,10 +9,25 @@ import android.graphics.Bitmap;
 public class CategoriaItem {
     private String nombre;
     private Bitmap imagen;
+    private int imageID;
 
     public CategoriaItem(String nombre, Bitmap imagen) {
         this.nombre = nombre;
         this.imagen = imagen;
+    }
+
+    public CategoriaItem(String nombre, int imageID) {
+        this.nombre = nombre;
+        this.imageID = imageID;
+    }
+
+
+    public int getImageID() {
+        return imageID;
+    }
+
+    public void setImageID(int imageID) {
+        this.imageID = imageID;
     }
 
     public String getNombre() {

@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * Created by karizp on 13/04/2018.
  */
@@ -35,7 +33,7 @@ public class EventCalendarAdapter extends ArrayAdapter<EventCalendarItem>{
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.list_item_event_calendar,null);
 
-        ImageView imageCategorie = v.findViewById(R.id.imgEventCalendar);
+        ImageView imageCategorie = v.findViewById(R.id.imgItemProfile);
         TextView date = v.findViewById(R.id.txtDate);
         TextView title = v.findViewById(R.id.txtTitle);
 
