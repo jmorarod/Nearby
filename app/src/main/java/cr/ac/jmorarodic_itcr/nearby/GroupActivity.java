@@ -26,8 +26,8 @@ public class GroupActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
 
-        CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,this);
-        recyclerView.setAdapter(adapterC);
+       // CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,this);
+        //recyclerView.setAdapter(adapterC);
 
 
 
