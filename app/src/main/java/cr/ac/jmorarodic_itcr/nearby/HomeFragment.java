@@ -56,10 +56,7 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void onClickAgregarEvento(View view){
-        Intent intent = new Intent(getActivity().getApplicationContext(),EventActivity.class);
-        startActivity(intent);
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

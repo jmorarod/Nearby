@@ -37,6 +37,7 @@
     <string name="url_listar_categorias">https://nearbyrestapi.herokuapp.com/restapi/api/categorias/listar?format=json</string>
     <string name="url_listar_sub_categorias">https://nearbyrestapi.herokuapp.com/restapi/api/subcategorias/listar?format=json</string>
     <string name="url_listar_categorias_usuario">https://nearbyrestapi.herokuapp.com/restapi/api/categoriausuario/id</string>
+    <string name = "url_usuario_detalle">https://nearbyrestapi.herokuapp.com/restapi/api/usuarios</string>
 
 
 
