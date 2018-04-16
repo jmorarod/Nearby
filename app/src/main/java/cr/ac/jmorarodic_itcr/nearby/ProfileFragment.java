@@ -1,6 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -24,11 +25,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,9 +52,15 @@ public class ProfileFragment extends Fragment {
 
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
-
+    JSONObject jsonResponse2;
+    ArrayList<ListItemProfile> listaGrupos = new ArrayList<>();
+    ArrayList<ListItemProfile> listaEventos = new ArrayList<>();
+    RequestQueue queue;
+    ListView listView;
+    ListView listView2;
     Bitmap bitmap;
     StringRequest jsonRequest;
+    StringRequest jsonRequest2;
     String api_key;
     CircleImageView image;
     TextView username;
@@ -66,30 +75,29 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View RootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ArrayList<ListItemProfile> listaGrupos = new ArrayList<>();
+
         username = RootView.findViewById(R.id.txtUsername);
+        listView = (ListView) RootView.findViewById(R.id.listGroup);
+        listView2 = (ListView) RootView.findViewById(R.id.listEvent);
+        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        /*
         for(int i =0; i<10;i++) {
             ListItemProfile l = new ListItemProfile(R.drawable.sports, "Titulo de noticia");
             listaGrupos.add(l);
         }
-
+        */
         //Carga en listview
-        final ListView listView = (ListView) RootView.findViewById(R.id.listGroup);
-        ListItemProfileAdapter listItemProfile = new ListItemProfileAdapter(getActivity().getApplicationContext(),R.layout.list_item_profile,listaGrupos);
-        listView.setAdapter(listItemProfile);
 
 
-        ArrayList<ListItemProfile> listaEventos = new ArrayList<>();
 
+        /*
         for(int i =0; i<10;i++) {
             ListItemProfile l = new ListItemProfile(R.drawable.photo, "Titulo de noticia");
             listaEventos.add(l);
-        }
+        }*/
 
-        //Carga en listview
-        final ListView listView2 = (ListView) RootView.findViewById(R.id.listEvent);
-        ListItemProfileAdapter listItemProfile2 = new ListItemProfileAdapter(getActivity().getApplicationContext(),R.layout.list_item_profile,listaEventos);
-        listView2.setAdapter(listItemProfile2);
+
+
 
         ImageView edit = RootView.findViewById(R.id.imgEdit);
         edit.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +125,8 @@ public class ProfileFragment extends Fragment {
 
             jsonRequestBody.put("key",api_key);
             getJson(jsonRequestBody,getString(R.string.url_usuario_detalle)+"/"+user+"/detalle");
-
+            //getGruposJson(jsonRequestBody, getString(R.string.url_usuario_grupos)+"/"+user+"/"+"detalle");
+            getEventosJson(jsonRequestBody, getString(R.string.url_listar_eventos));
 //            Log.i("json",jsonResponse.toString());
         } catch (JSONException e) {
             Log.i("Error",e.toString());
@@ -130,7 +139,7 @@ public class ProfileFragment extends Fragment {
 
     public void getJson(final JSONObject jsonBody, String url){
         final JSONObject jsonObj = new JSONObject();
-        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
 
         final String requestBody = jsonBody.toString();
 
@@ -225,5 +234,179 @@ public class ProfileFragment extends Fragment {
             return null;
         }
     }
+    public void getGruposJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Response",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadGrupos(jsonResponse);
+
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+    public void loadGrupos(JSONObject jsonObject){
+        Bitmap bitmap;
+        jsonRequest.cancel();
+        ArrayList<String> urls = new ArrayList<>();
+        ArrayList<String> nombres = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject row = jsonArray.getJSONObject(i);
+                JSONObject grupo = row.getJSONObject("grupo");
+                urls.add(grupo.getString("foto"));
+                nombres.add(grupo.getString("nombre"));
+
+
+            }
+
+            for(int i = 0; i < urls.size(); i++){
+                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+                bitmap = imageDownloadTask.execute(urls.get(i)).get();
+                ListItemProfile l = new ListItemProfile(bitmap, nombres.get(i));
+                listaGrupos.add(l);
+            }
+
+            ListItemProfileAdapter listItemProfile = new ListItemProfileAdapter(getActivity().getApplicationContext(),R.layout.list_item_profile,listaGrupos);
+            listView.setAdapter(listItemProfile);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getEventosJson(final JSONObject jsonBody, String url){
+        Log.i("GetJson","Get Eventos");
+        final JSONObject jsonObj = new JSONObject();
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest2 = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Get Eventos",jsonObj.toString());
+                            jsonResponse2 = jsonObj;
+                            loadEventos(jsonResponse2);
+
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest2);
+
+    }
+    public void loadEventos(JSONObject jsonObject){
+        Bitmap bitmap;
+        jsonRequest.cancel();
+        ArrayList<String> urls = new ArrayList<>();
+        ArrayList<String> nombres = new ArrayList<>();
+        Log.i("LoadEventos","LoadEventos");
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject row = jsonArray.getJSONObject(i);
+                JSONObject persona = row.getJSONObject("persona");
+                SharedPreferences sharedPreferences =  getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
+                String user = sharedPreferences.getString("user","2");
+                if(persona.getString("id") == user) {
+                    urls.add(row.getString("imagen"));
+                    nombres.add(row.getString("descripcion"));
+                }
+
+
+            }
+
+            for(int i = 0; i < urls.size(); i++){
+                ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
+                bitmap = imageDownloadTask.execute(urls.get(i)).get();
+                ListItemProfile l = new ListItemProfile(bitmap, nombres.get(i));
+                listaEventos.add(l);
+            }
+
+            ListItemProfileAdapter listItemProfile = new ListItemProfileAdapter(getActivity().getApplicationContext(),R.layout.list_item_profile,listaEventos);
+            listView2.setAdapter(listItemProfile);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

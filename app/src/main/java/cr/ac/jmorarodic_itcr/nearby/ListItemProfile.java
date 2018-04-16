@@ -1,23 +1,25 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by karizp on 14/04/2018.
  */
 
 public class ListItemProfile {
-    private int image;
+    private Bitmap image;
     private String title;
 
-    public ListItemProfile(int image, String title) {
+    public ListItemProfile(Bitmap image, String title) {
         this.image = image;
         this.title = title;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 

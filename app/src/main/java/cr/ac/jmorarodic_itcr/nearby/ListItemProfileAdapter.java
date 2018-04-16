@@ -39,7 +39,7 @@ public class ListItemProfileAdapter extends ArrayAdapter<ListItemProfile> {
 
         if(lista.get(position)!=null)
         {
-            imageCategorie.setImageResource(lista.get(position).getImage());
+            imageCategorie.setImageBitmap(lista.get(position).getImage());
             title.setText(lista.get(position).getTitle());
         }
 
