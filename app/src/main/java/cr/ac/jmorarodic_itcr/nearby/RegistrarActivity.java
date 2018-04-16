@@ -28,6 +28,8 @@ public class RegistrarActivity extends AppCompatActivity {
         EditText correoText = (EditText)findViewById(R.id.correoText);
         EditText passwordText = (EditText)findViewById(R.id.passwordText);
         EditText cPasswordText = (EditText)findViewById(R.id.confirmPasswordText);
+        EditText userText = findViewById(R.id.nombreText);
+        String nombre = userText.getText().toString();
         Spinner spinner = findViewById(R.id.spinner2);
         String correo = correoText.getText().toString();
 
@@ -37,7 +39,7 @@ public class RegistrarActivity extends AppCompatActivity {
         if(password.equals(confirmPassword)){
             String genero = spinner.getSelectedItem().toString();
             String fecha = nMonth +"/"+nDay+"/"+nYear;
-            if(correo != "" && password != "" && confirmPassword != "" && genero != "" && fecha != "0/0/0") {
+            if(correo != "" && password != "" && confirmPassword != "" && genero != "" && fecha != "0/0/0" && nombre != "") {
                 //TODO: Registrar en backend
                 Log.i("usuario", correo + " " + password + " " + genero + " " + fecha);
                 Intent intent = new Intent(this, CategoriasActivity.class);
