@@ -63,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callbackManager = CallbackManager.Factory.create();
+
+
         //TODO: ver si está logueado, si no
         SharedPreferences sharedPreferences = this.getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+
         //Quitar comentario de la siguiente linea para quitar la sesión
         //sharedPreferences.edit().putBoolean("logged",false).apply();
         if(sharedPreferences.getBoolean("logged",false)){

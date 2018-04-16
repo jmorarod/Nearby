@@ -195,8 +195,10 @@ public class ProfileFragment extends Fragment {
             JSONObject jsonObj = jsonObject.getJSONObject("response");
             String url = jsonObj.getString("foto");
 
-            //TODO: cambiar por nombre
-            username.setText(jsonObj.getString("correo"));
+
+            JSONObject jsonUser =jsonObj.getJSONObject("user");
+
+            username.setText(jsonUser.getString("username"));
             ImageDownloadTask imageDownloadTask = new ImageDownloadTask();
             Log.i("url",url);
             bitmap = imageDownloadTask.execute(url).get();

@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment {
         categorias = new ArrayList<>();
         SharedPreferences sharedPreferences =  getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
         api_key = sharedPreferences.getString("auth_token","");
+
         if(categorias.size() == 0) {
             try {
                 jsonRequestBody.put("key", api_key);

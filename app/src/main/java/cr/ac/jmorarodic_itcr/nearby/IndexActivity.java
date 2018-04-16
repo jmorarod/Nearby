@@ -1,6 +1,8 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -32,6 +34,9 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+        //TODO:quitar lo siguiente cuando esté el login
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("auth_token","c7700bfe9c3e35e4cfa8dd60f356b0535304ebaf").apply();
 
         mainNav = (BottomNavigationView) findViewById(R.id.main_menu);
         mainFrame = (FrameLayout) findViewById(R.id.mainFrame);
