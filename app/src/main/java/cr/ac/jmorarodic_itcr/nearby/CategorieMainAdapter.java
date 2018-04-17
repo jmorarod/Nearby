@@ -27,12 +27,16 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     private Integer[] mImages;
     private Context mContext;
     private Bitmap[] mImagesBitmaps;
+    private ArrayList<String> mCategoriesID;
+    private String currentCategorie;
 
-    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext, Bitmap[] mImagesBitmaps) {
+    public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext, Bitmap[] mImagesBitmaps, ArrayList<String> mCategoriesID) {
         this.mCategories = mCategories;
         this.mImages = mImages;
         this.mContext = mContext;
         this.mImagesBitmaps = mImagesBitmaps;
+        this.mCategoriesID = mCategoriesID;
+        currentCategorie = "1";
     }
 
     @NonNull
@@ -57,10 +61,14 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, mCategories[position], Toast.LENGTH_SHORT).show();
+                currentCategorie = mCategoriesID.get(position);
             }
         });
     }
 
+    public String getCurrentCategorie(){
+        return currentCategorie;
+    }
     @Override
     public int getItemCount() {
         return mCategories.length;

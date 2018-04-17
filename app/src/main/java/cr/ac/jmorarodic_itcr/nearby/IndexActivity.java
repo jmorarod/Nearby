@@ -25,9 +25,11 @@ public class IndexActivity extends AppCompatActivity {
     private CalendarFragment calendarFragment;
     private NotificationFragment notificationFragment;
     private ProfileFragment profileFragment;
+    public static final String CATEGORIA_MENSAJE = "com.example.myfirstapp.MESSAGE";
 
     public void onClickAgregarEvento(View view){
         Intent intent = new Intent(getApplicationContext(),NewEventActivity.class);
+        intent.putExtra(CATEGORIA_MENSAJE,homeFragment.getCategorieMainAdapter().getCurrentCategorie());
         startActivity(intent);
     }
     @Override
@@ -37,7 +39,7 @@ public class IndexActivity extends AppCompatActivity {
         //TODO:quitar lo siguiente cuando esté el login
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
         sharedPreferences.edit().putString("auth_token","c7700bfe9c3e35e4cfa8dd60f356b0535304ebaf").apply();
-
+        Log.i("TestIndex","TEst");
         mainNav = (BottomNavigationView) findViewById(R.id.main_menu);
         mainFrame = (FrameLayout) findViewById(R.id.mainFrame);
 

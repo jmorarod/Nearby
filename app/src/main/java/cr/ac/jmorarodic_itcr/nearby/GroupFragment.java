@@ -46,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 public class GroupFragment extends Fragment {
     ArrayList<Bitmap> mbitmaps = new ArrayList<>();
     ArrayList<String> categorias = new ArrayList<>();
+    ArrayList<String> idCategorias = new ArrayList<>();
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
@@ -197,7 +198,7 @@ public class GroupFragment extends Fragment {
                 mCategories[i] = categorias.get(i);
                 bitmaps[i] = mbitmaps.get(i);
             }
-            CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps);
+            CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
             recyclerView.setAdapter(adapterC);
             adapterC.notifyDataSetChanged();
 

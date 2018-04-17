@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         callbackManager = CallbackManager.Factory.create();
 
-
+        Log.i("TestMain","Test");
         //TODO: ver si está logueado, si no
         SharedPreferences sharedPreferences = this.getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
 

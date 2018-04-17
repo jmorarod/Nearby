@@ -15,7 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -47,11 +50,16 @@ public class HomeFragment extends Fragment {
 
     ArrayList<Bitmap> mbitmaps = new ArrayList<>();
     ArrayList<String> categorias = new ArrayList<>();
+    ArrayList<String> idCategorias = new ArrayList<>();
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
     String api_key;
     RecyclerView recyclerView;
+    CategorieMainAdapter adapterC;
+    public CategorieMainAdapter getCategorieMainAdapter(){
+        return adapterC;
+    }
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -73,11 +81,13 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false);
         recyclerView = (RecyclerView) RootView.findViewById(R.id.listMainCategorieView);
         recyclerView.setLayoutManager(layoutManager);
+
+
         mbitmaps = new ArrayList<>();
         categorias = new ArrayList<>();
         SharedPreferences sharedPreferences =  getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
         api_key = sharedPreferences.getString("auth_token","");
-
+        Log.i("Test","Test");
         if(categorias.size() == 0) {
             try {
                 jsonRequestBody.put("key", api_key);
@@ -190,6 +200,7 @@ public class HomeFragment extends Fragment {
                 JSONObject categoria = row.getJSONObject("categoria");
                 urls.add(categoria.getString("foto"));
                 categorias.add(categoria.getString("nombre"));
+                categorias.add(categoria.getString("id"));
             }
 
             for(int i = 0; i < urls.size(); i++){
@@ -206,7 +217,7 @@ public class HomeFragment extends Fragment {
                 mCategories[i] = categorias.get(i);
                 bitmaps[i] = mbitmaps.get(i);
             }
-            CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps);
+            adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps, idCategorias);
             recyclerView.setAdapter(adapterC);
             adapterC.notifyDataSetChanged();
 

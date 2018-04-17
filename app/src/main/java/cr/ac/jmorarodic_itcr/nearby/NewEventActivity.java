@@ -47,10 +47,11 @@ public class NewEventActivity extends AppCompatActivity {
     private ImageView image;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     LatLng placeLocation;
+    private String categoriaID;
     Uri path;
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
-    Map map;
+    Map map = null;
     StringRequest jsonRequest;
     String api_key;
 
@@ -126,6 +127,9 @@ public class NewEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(IndexActivity.CATEGORIA_MENSAJE);
+        categoriaID = message;
 
         image=findViewById(R.id.imgEvent);
     }
@@ -184,12 +188,16 @@ public class NewEventActivity extends AppCompatActivity {
                 parameters.put("fecha", (String) txtFecha.getText());
                 parameters.put("lugar", (String) txtLugar.getText());
                 parameters.put("descripcion", (String) txtDescripcion.getText());
-                parameters.put("imagen", (String) map.get("secure_url"));
+                if(map != null)
+                    parameters.put("imagen", (String) map.get("secure_url"));
+                else
+                    parameters.put("imagen", "");
                 parameters.put("latitud", String.valueOf(placeLocation.latitude));
                 parameters.put("longitud", String.valueOf(placeLocation.longitude));
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
                 String user = sharedPreferences.getString("user", "2");
                 parameters.put("persona",user);
+                parameters.put("categoria",categoriaID);
                 return parameters;
             }
             @Override
