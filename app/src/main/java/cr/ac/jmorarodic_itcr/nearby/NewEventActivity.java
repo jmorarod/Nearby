@@ -1,19 +1,28 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.SyncStateContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -38,7 +47,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +70,8 @@ public class NewEventActivity extends AppCompatActivity {
     Map map = null;
     StringRequest jsonRequest;
     String api_key;
+    private static final int MY_PERMISSION_REQUEST = 1;
+
 
 
     public void onClickGuardarEvento(View view){
@@ -61,7 +79,7 @@ public class NewEventActivity extends AppCompatActivity {
         api_key = sharedPreferences.getString("auth_token","");
         try {
             jsonRequestBody.put("key",api_key);
-            postJson(jsonRequestBody,getString(R.string.url_listar_categorias));
+            postJson(jsonRequestBody,getString(R.string.url_crear_evento));
 
 //            Log.i("json",jsonResponse.toString());
         } catch (JSONException e) {
@@ -107,19 +125,10 @@ public class NewEventActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK)
             {
                 path = data.getData();
+                ImageUploadTask imageUploadTask = new ImageUploadTask();
+                imageUploadTask.execute(path);
                 image.setImageURI(path);
-                Map config = new HashMap();
-                config.put("cloud_name", "poppycloud");
-                config.put("api_key", "328358331617938");
-                config.put("api_secret", "z-7k70XpvP1dl1ZdiqVF0olXp7A");
 
-                Cloudinary cloudinary = new Cloudinary(config);
-                try {
-                    map = cloudinary.uploader().upload(path, ObjectUtils.emptyMap() );
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -130,7 +139,7 @@ public class NewEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(IndexActivity.CATEGORIA_MENSAJE);
         categoriaID = message;
-
+        getPermissions();
         image=findViewById(R.id.imgEvent);
     }
 
@@ -182,14 +191,16 @@ public class NewEventActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getParams() throws  AuthFailureError{
                 HashMap<String, String> parameters = new HashMap<String, String>();
-                TextView txtFecha = findViewById(R.id.txtFecha);
-                TextView txtLugar = findViewById(R.id.txtLocation);
-                TextView txtDescripcion = findViewById(R.id.txtDescription);
-                parameters.put("fecha", (String) txtFecha.getText());
-                parameters.put("lugar", (String) txtLugar.getText());
-                parameters.put("descripcion", (String) txtDescripcion.getText());
-                if(map != null)
+                EditText txtFecha = findViewById(R.id.txtDate);
+                EditText txtLugar = findViewById(R.id.txtLocation);
+                EditText txtDescripcion = findViewById(R.id.txtDescription);
+                parameters.put("fecha", txtFecha.getText().toString());
+                parameters.put("lugar", txtLugar.getText().toString());
+                parameters.put("descripcion",  txtDescripcion.getText().toString());
+                if(map != null) {
                     parameters.put("imagen", (String) map.get("secure_url"));
+                    Log.i("map not null",(String) map.get("secure_url"));
+                }
                 else
                     parameters.put("imagen", "");
                 parameters.put("latitud", String.valueOf(placeLocation.latitude));
@@ -198,6 +209,7 @@ public class NewEventActivity extends AppCompatActivity {
                 String user = sharedPreferences.getString("user", "2");
                 parameters.put("persona",user);
                 parameters.put("categoria",categoriaID);
+                parameters.put("calificacion","5");
                 return parameters;
             }
             @Override
@@ -218,5 +230,93 @@ public class NewEventActivity extends AppCompatActivity {
 
     }
 
+    class ImageUploadTask extends AsyncTask<Uri,Void,Bitmap> {
+        File file;
+        FileInputStream fileInputStream;
+        @Override
+        protected Bitmap doInBackground(Uri... urls) {
 
+            Map config = new HashMap();
+            config.put("cloud_name", "poppycloud");
+            config.put("api_key", "328358331617938");
+            config.put("api_secret", "z-7k70XpvP1dl1ZdiqVF0olXp7A");
+
+            Cloudinary cloudinary = new Cloudinary(config);
+
+            file = new File(String.valueOf(urls[0]));
+            try {
+                fileInputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                Log.i("URI",urls[0].getPath());
+                String path = getRealPathFromUri(getApplicationContext(),urls[0]);
+                Log.i("Path",path);
+                map = cloudinary.uploader().upload(path, ObjectUtils.emptyMap() );
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public void getPermissions() {
+        if(ContextCompat.checkSelfPermission(NewEventActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if(ActivityCompat.shouldShowRequestPermissionRationale(NewEventActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                ActivityCompat.requestPermissions(NewEventActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+            else {
+
+                ActivityCompat.requestPermissions(NewEventActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST);
+            }
+        }
+        else {
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch(requestCode) {
+            case MY_PERMISSION_REQUEST:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                    if(ContextCompat.checkSelfPermission(NewEventActivity.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                else {
+                    Toast.makeText(this, "No permission granted", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+        }
+    }
 }

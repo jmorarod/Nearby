@@ -200,7 +200,7 @@ public class HomeFragment extends Fragment {
                 JSONObject categoria = row.getJSONObject("categoria");
                 urls.add(categoria.getString("foto"));
                 categorias.add(categoria.getString("nombre"));
-                categorias.add(categoria.getString("id"));
+                idCategorias.add(categoria.getString("id"));
             }
 
             for(int i = 0; i < urls.size(); i++){
@@ -215,6 +215,7 @@ public class HomeFragment extends Fragment {
             for(int i = 0; i < categorias.size(); i++)
             {
                 mCategories[i] = categorias.get(i);
+                Log.i("Categoria",categorias.get(i));
                 bitmaps[i] = mbitmaps.get(i);
             }
             adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps, idCategorias);
