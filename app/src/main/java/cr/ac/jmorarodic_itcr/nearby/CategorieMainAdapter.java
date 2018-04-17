@@ -169,6 +169,8 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
             return null;
         }

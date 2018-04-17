@@ -233,6 +233,8 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }catch (Exception e){
+                Log.i("exception",e.toString());
             }
             return null;
         }
