@@ -1,6 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -223,16 +227,16 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     public void loadEventos(JSONObject jsonObject){
         Bitmap bitmap;
         jsonRequest.cancel();
-        ArrayList<String> urls = new ArrayList<>();
-        ArrayList<String> fechas = new ArrayList<>();
-        ArrayList<String> lugares = new ArrayList<>();
+        final ArrayList<String> urls = new ArrayList<>();
+        final ArrayList<String> fechas = new ArrayList<>();
+        final ArrayList<String> lugares = new ArrayList<>();
         ArrayList<String> users = new ArrayList<>();
-        ArrayList<String> puntuaciones = new ArrayList<>();
-        ArrayList<String> titulos = new ArrayList<>();
-        ArrayList<String> descripciones = new ArrayList<>();
-        ArrayList<String> idEventos = new ArrayList<>();
-        ArrayList<String> latitudes = new ArrayList<>();
-        ArrayList<String> longitudes = new ArrayList<>();
+        final ArrayList<String> puntuaciones = new ArrayList<>();
+        final ArrayList<String> titulos = new ArrayList<>();
+        final ArrayList<String> descripciones = new ArrayList<>();
+        final ArrayList<String> idEventos = new ArrayList<>();
+        final ArrayList<String> latitudes = new ArrayList<>();
+        final ArrayList<String> longitudes = new ArrayList<>();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("response");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -262,6 +266,27 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
 
             EventMainAdapter eventMainAdapter = new EventMainAdapter(activity.getApplicationContext(),R.layout.list_item_categories_main,eventItems);
             listView.setAdapter(eventMainAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                    Intent intent = new Intent(activity.getApplicationContext(),EventActivity.class);
+                    intent.putExtra("Titulo",titulos.get(position));
+                   /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    Bitmap bmp = eventItems.get(position).getImageCategorie();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    intent.putExtra("Bitmap", byteArray);*/
+                    intent.putExtra("Imagen",urls.get(position));
+                    intent.putExtra("Calificacion",puntuaciones.get(position));
+                    intent.putExtra("Fecha",fechas.get(position));
+                    intent.putExtra("Lugar",lugares.get(position));
+                    intent.putExtra("Descripcion",descripciones.get(position));
+                    intent.putExtra("EventoID",idEventos.get(position));
+                    intent.putExtra("Lat",latitudes.get(position));
+                    intent.putExtra("Lon",longitudes.get(position));
+                    getActivity().startActivity(intent);
+                }
+            });
 
         } catch (JSONException e) {
             e.printStackTrace();

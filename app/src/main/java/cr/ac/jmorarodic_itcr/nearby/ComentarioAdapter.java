@@ -1,6 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +31,16 @@ public class ComentarioAdapter extends ArrayAdapter<ComentarioItem> {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.list_item_comment, null);
 
-        ImageView imageView = v.findViewById(R.id.userImg);
-        TextView userText = v.findViewById(R.id.userNameText);
+        ImageView imageView = v.findViewById(R.id.profile_image);
+        TextView userText = v.findViewById(R.id.txtUsername);
         TextView commentText = v.findViewById(R.id.txtComment);
-
-        if(comentarios.get(position).getUserImage() != null) {
-            userText.setText(comentarios.get(position).getUserName());
-            commentText.setText(comentarios.get(position).getComentario());
+        userText.setText(comentarios.get(position).getUserName());
+        commentText.setText(comentarios.get(position).getComentario());
+        if(comentarios.get(position).getUserImage() != null)
             imageView.setImageBitmap(comentarios.get(position).getUserImage());
-        }
+        else
+            imageView.setImageResource(comentarios.get(position).getUserImageResource());
+
 
         return v;
 

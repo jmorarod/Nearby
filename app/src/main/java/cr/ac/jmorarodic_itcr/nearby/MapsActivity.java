@@ -1,6 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.EventLog;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,8 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         //TODO: ver de que activity viene, eventActivity o agrear nuevo evento
         Intent intent = getIntent();
-        //lat = intent.getFloatExtra(EventActivity.LAT);
-        //lon = intent.getFloatExtra(EventActivity.LAT);
+        lat = intent.getFloatExtra("LAT",0);
+        lon = intent.getFloatExtra("LON",0);
         //userLat = intent.getFloatExtra(EventActivity.LAT);
         //userLon = intent.getFloatExtra(EventActivity.LAT);
 
@@ -78,8 +80,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng place = new LatLng(lat, lon);
+        Log.i("Lat",lat+"");
+        Log.i("lon",lon+"");
         mMap.addMarker(new MarkerOptions().position(place).title("Lugar"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(place));
+        mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                lat = (float)currentLocation.latitude;
+                lon = (float)currentLocation.longitude;
+
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 0);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -87,9 +118,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             //mMap.clear();
-
-            LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+            if(lastLocation!=null) {
+                LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+            }
         }
         else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -97,9 +129,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             //mMap.clear();
-
-            LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+            if(lastLocation!= null) {
+                LatLng location = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(location).title("Usted está acá"));
+            }
             //mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         }
     }

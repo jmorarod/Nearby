@@ -10,11 +10,20 @@ public class ComentarioItem {
     private String userName;
     private String comentario;
     private Bitmap userImage;
+    private int userImageResource;
 
     public ComentarioItem(String userName, String comentario, Bitmap userImage) {
         this.userName = userName;
         this.comentario = comentario;
         this.userImage = userImage;
+
+    }
+    public ComentarioItem(String userName, String comentario, int userImageResource) {
+        this.userName = userName;
+        this.comentario = comentario;
+        this.userImage = null;
+        this.userImageResource = userImageResource;
+
     }
 
     public ComentarioItem(String userName, String comentario) {
@@ -45,5 +54,13 @@ public class ComentarioItem {
 
     public void setUserImage(Bitmap userImage) {
         this.userImage = userImage;
+    }
+
+    public int getUserImageResource() {
+        return userImageResource;
+    }
+
+    public void setUserImageResource(int userImageResource) {
+        this.userImageResource = userImageResource;
     }
 }
