@@ -1,13 +1,20 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +34,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +44,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,12 +63,19 @@ public class HomeFragment extends Fragment {
     ArrayList<Bitmap> mbitmaps = new ArrayList<>();
     ArrayList<String> categorias = new ArrayList<>();
     ArrayList<String> idCategorias = new ArrayList<>();
+    ArrayList<EventItem> eventItems = new ArrayList<>();
+    LocationManager locationManager;
+    LocationListener locationListener;
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
+    StringRequest jsonRequest2;
     String api_key;
     RecyclerView recyclerView;
     CategorieMainAdapter adapterC;
+    ListView listView;
+    private String lat = "9";
+    private String lon = "-84";
     public CategorieMainAdapter getCategorieMainAdapter(){
         return adapterC;
     }
@@ -71,7 +90,7 @@ public class HomeFragment extends Fragment {
         /* Inflate the layout for this fragment*/
 
         View RootView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        eventItems = new ArrayList<>();
         //Carga lista vertical categorias
         //Ejemplo de datos
 
@@ -81,6 +100,54 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false);
         recyclerView = (RecyclerView) RootView.findViewById(R.id.listMainCategorieView);
         recyclerView.setLayoutManager(layoutManager);
+
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                lat = currentLocation.latitude+"";
+                lon = currentLocation.longitude+"";
+                if(adapterC!=null){
+                    adapterC.setLat(lat);
+                    adapterC.setLon(lon);
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 0);
+        }
+        else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(lastLocation != null) {
+                lat = lastLocation.getLatitude() + "";
+                lon = lastLocation.getLongitude() + "";
+            }
+            if(adapterC!=null){
+                adapterC.setLat(lat);
+                adapterC.setLon(lon);
+            }
+
+
+        }
 
 
         mbitmaps = new ArrayList<>();
@@ -94,7 +161,7 @@ public class HomeFragment extends Fragment {
 
                 String user = sharedPreferences.getString("user", "2");
                 getJson(jsonRequestBody, getString(R.string.url_listar_categorias_usuario)+"?usuario="+user);
-
+                //getEventosJson(jsonRequestBody,getString(R.string.url_evento_cerca)+"?latitud="+lat+"&longitud="+lon+"&categoria="+categorias.get(Integer.parseInt(adapterC.getCurrentCategorie())-1));
 //            Log.i("json",jsonResponse.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -106,26 +173,11 @@ public class HomeFragment extends Fragment {
 
         //Carga eventos disponibles
         //Solo son ejemplos de eventos
-        ArrayList<EventItem> eventItems = new ArrayList<>();
-        EventItem e = new EventItem("13 Marzo 2018", "Username", "4.5", "Titulo 1" , "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
-                R.drawable.sports,R.drawable.profile_default);
-
-        eventItems.add(e);
-
-        e = new EventItem("13 Marzo 2018", "Username", "4.5", "Titulo 1" , "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
-                R.drawable.photo,R.drawable.profile_default);
-
-        eventItems.add(e);
-
-        e = new EventItem("13 Marzo 2018", "Username", "4.5", "Titulo 1" , "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
-                R.drawable.technology,R.drawable.profile_default);
-
-        eventItems.add(e);
 
         //Carga en listview
-        final ListView listView = (ListView) RootView.findViewById(R.id.listMainEvent);
-        EventMainAdapter eventMainAdapter = new EventMainAdapter(getActivity().getApplicationContext(),R.layout.list_item_categories_main,eventItems);
-        listView.setAdapter(eventMainAdapter);
+        listView = (ListView) RootView.findViewById(R.id.listMainEvent);
+        //agregar onclicklistener
+
 
 
 
@@ -138,6 +190,7 @@ public class HomeFragment extends Fragment {
     }
 
     //Carga las categorias
+
     public void getJson(final JSONObject jsonBody, String url){
         final JSONObject jsonObj = new JSONObject();
         RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -219,6 +272,11 @@ public class HomeFragment extends Fragment {
                 bitmaps[i] = mbitmaps.get(i);
             }
             adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps, idCategorias);
+            adapterC.setActivity(getActivity());
+            adapterC.setLon(lon);
+            adapterC.setLat(lat);
+            adapterC.setEventItems(eventItems);
+            adapterC.setListView(listView);
             recyclerView.setAdapter(adapterC);
             adapterC.notifyDataSetChanged();
 
@@ -231,6 +289,7 @@ public class HomeFragment extends Fragment {
         }
 
     }
+
     class ImageDownloadTask extends AsyncTask<String,Void,Bitmap> {
 
         @Override
@@ -254,4 +313,19 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 0) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                }
+            }
+
+        }
+    }
 }

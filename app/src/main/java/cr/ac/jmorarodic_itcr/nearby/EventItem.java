@@ -1,5 +1,7 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by karizp on 13/04/2018.
  */
@@ -10,11 +12,13 @@ public class EventItem {
     private String stars;
     private String title;
     private String description;
-    private int imageCategorie;
+    private Bitmap imageCategorie;
     private int imageProfile;
+    private String lat;
+    private String lon;
 
 
-    public EventItem(String date, String username, String stars, String title, String description, int imageCategorie, int imageProfile) {
+    public EventItem(String date, String username, String stars, String title, String description, Bitmap imageCategorie, int imageProfile, String lat, String lon) {
         this.date = date;
         this.username = username;
         this.stars = stars;
@@ -22,6 +26,8 @@ public class EventItem {
         this.description = description;
         this.imageCategorie = imageCategorie;
         this.imageProfile = imageProfile;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public int getImageProfile() {
@@ -72,11 +78,11 @@ public class EventItem {
         this.description = description;
     }
 
-    public int getImageCategorie() {
+    public Bitmap getImageCategorie() {
         return imageCategorie;
     }
 
-    public void setImageCategorie(int imageCategorie) {
+    public void setImageCategorie(Bitmap imageCategorie) {
         this.imageCategorie = imageCategorie;
     }
 }

@@ -48,7 +48,7 @@ public class EventMainAdapter extends ArrayAdapter<EventItem> {
         if(eventos.get(position)!=null)
         {
 
-            imageCategorie.setImageResource(eventos.get(position).getImageCategorie());
+            imageCategorie.setImageBitmap(eventos.get(position).getImageCategorie());
             imageProfile.setImageResource(eventos.get(position).getImageProfile());
             date.setText(eventos.get(position).getDate());
             username.setText(eventos.get(position).getUsername());

@@ -41,6 +41,7 @@
     <string name = "url_usuario_grupos">https://nearbyrestapi.herokuapp.com/restapi/api/usuariogrupo</string>
     <string name = "url_listar_eventos">https://nearbyrestapi.herokuapp.com/restapi/api/eventos/listar</string>
     <string name = "url_crear_evento">https://nearbyrestapi.herokuapp.com/restapi/api/eventos/crear</string>
+    <string name = "url_evento_cerca">https://nearbyrestapi.herokuapp.com/restapi/api/ecercacategoria</string>
 
 
 </resources>

@@ -80,6 +80,7 @@ public class ProfileFragment extends Fragment {
         listView = (ListView) RootView.findViewById(R.id.listGroup);
         listView2 = (ListView) RootView.findViewById(R.id.listEvent);
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        listaEventos = new ArrayList<>();
         /*
         for(int i =0; i<10;i++) {
             ListItemProfile l = new ListItemProfile(R.drawable.sports, "Titulo de noticia");
@@ -401,6 +402,7 @@ public class ProfileFragment extends Fragment {
 
             ListItemProfileAdapter listItemProfile = new ListItemProfileAdapter(getActivity().getApplicationContext(),R.layout.list_item_profile,listaEventos);
             listView2.setAdapter(listItemProfile);
+            listItemProfile.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();
