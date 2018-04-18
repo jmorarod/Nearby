@@ -15,6 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -24,6 +31,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,13 +39,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     LoginButton loginButton;
     private String defaultPassword;
     private String email;
+
+    JSONObject jsonResponse;
+    JSONObject jsonRequestBody = new JSONObject();
+    StringRequest jsonRequest;
+    String api_key;
+    String userid;
+
     public void onClickIngresar(View view){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
@@ -73,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callbackManager = CallbackManager.Factory.create();
+
+        defaultPassword = "12345asd";
 
         Log.i("TestMain","Test");
         //TODO: ver si está logueado, si no
@@ -178,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
             if (object.has("location"))
                 bundle.putString("location", object.getJSONObject("location").getString("name"));
 
+            email = object.getString("email");
+            createUser();
+
             return bundle;
         }
         catch(JSONException e) {
@@ -185,6 +208,193 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    public void createUser()
+    {
+        SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        api_key = sharedPreferences.getString("auth_token","");
+        try {
+            jsonRequestBody.put("key",api_key);
+            postJson(jsonRequestBody,"https://nearbyrestapi.herokuapp.com/rest-auth/registration/");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void postJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",response);
+                            Log.i("Response API",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadApiKey(jsonResponse);
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> parameters = new HashMap<String, String>();
+
+                parameters.put("username", email);
+                parameters.put("email", email);
+                parameters.put("password1", defaultPassword);
+                parameters.put("password2",  defaultPassword);
+
+
+                return parameters;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Content-Type", "application/json");
+                //headers.put("Authorization","Token "+jsonBody.getString("key"));
+
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+
+    void loadApiKey(JSONObject jsonObject)
+    {
+        jsonRequest.cancel();
+        ArrayList<String> response = new ArrayList<>();
+        try {
+            jsonObject = new JSONObject(jsonObject.getString("response"));
+            api_key = jsonObject.getString("key");
+            Log.i("JSON_API",api_key);
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+            editor.putString("auth_token",api_key).apply();
+
+
+            getUserid();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getUserid()
+    {
+        SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        api_key = sharedPreferences.getString("auth_token","");
+        try {
+            jsonRequestBody.put("key",api_key);
+            getJson(jsonRequestBody,("https://nearbyrestapi.herokuapp.com/restapi/api/usuarioactual?user="+api_key));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Response ID",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadUserid(jsonResponse);
+
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Log.i("Response","GetHeaders");
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+
+    public void loadUserid(JSONObject jsonObject)
+    {
+        jsonRequest.cancel();
+        ArrayList<String> response = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+
+            userid = ""+ jsonArray.getJSONObject(0).getInt("user");
+            Log.i("USER_ID",userid);
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString("user", userid).apply();
+
+
+            Intent intent = new Intent(this, CategoriasActivity.class);
+            startActivity(intent);
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override
