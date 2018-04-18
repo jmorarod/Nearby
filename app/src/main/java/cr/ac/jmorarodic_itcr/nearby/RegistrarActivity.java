@@ -52,6 +52,8 @@ public class RegistrarActivity extends AppCompatActivity {
     String api_key;
     String userid;
 
+    boolean login=false;
+
 
     public void onClickRegistrar(View view){
         correoText = (EditText)findViewById(R.id.correoText);
@@ -81,8 +83,8 @@ public class RegistrarActivity extends AppCompatActivity {
                 Log.i("Usuario",""+userid);
                 Log.i ("API", ""+api_key);
 
-                Intent intent = new Intent(this, CategoriasActivity.class);
-                startActivity(intent);
+
+
             }else{
                 Toast.makeText(this,"Debe llenar todos los campos",Toast.LENGTH_SHORT).show();
             }
@@ -193,7 +195,7 @@ public class RegistrarActivity extends AppCompatActivity {
             public Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> parameters = new HashMap<String, String>();
 
-                parameters.put("username", userText.getText().toString());
+                parameters.put("username", correoText.getText().toString());
                 parameters.put("email", correoText.getText().toString());
                 parameters.put("password1", passwordText.getText().toString());
                 parameters.put("password2",  cPasswordText.getText().toString());
@@ -317,6 +319,13 @@ public class RegistrarActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putString("user", userid).apply();
+
+            login=true;
+
+            Intent intent = new Intent(this, CategoriasActivity.class);
+            startActivity(intent);
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();
