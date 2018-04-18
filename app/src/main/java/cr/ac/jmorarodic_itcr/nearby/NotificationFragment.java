@@ -29,10 +29,10 @@ public class NotificationFragment extends Fragment {
        View RootView= inflater.inflate(R.layout.fragment_notification, container, false);
         ArrayList<EventCalendarItem> eventos = new ArrayList<>();
 
-        for(int i =0; i<10;i++) {
-            EventCalendarItem e = new EventCalendarItem(R.drawable.sports, "Titulo de noticia", "14 Abril 2018");
-            eventos.add(e);
-        }
+        //for(int i =0; i<10;i++) {
+        //    EventCalendarItem e = new EventCalendarItem(R.drawable.sports, "Titulo de noticia", "14 Abril 2018");
+        //    eventos.add(e);
+        //}
 
         //Carga en listview
         final ListView listView = (ListView) RootView.findViewById(R.id.notificationEventList);

@@ -41,7 +41,7 @@ public class EventCalendarAdapter extends ArrayAdapter<EventCalendarItem>{
         if(eventos.get(position)!=null)
         {
 
-            imageCategorie.setImageResource(eventos.get(position).getImage());
+            imageCategorie.setImageBitmap(eventos.get(position).getImage());
             date.setText(eventos.get(position).getDate());
             title.setText(eventos.get(position).getTitle());
 

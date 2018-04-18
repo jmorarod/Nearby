@@ -1,25 +1,27 @@
 package cr.ac.jmorarodic_itcr.nearby;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by karizp on 13/04/2018.
  */
 
 public class EventCalendarItem {
-    private int image;
+    private Bitmap image;
     private String title;
     private String date;
 
-    public EventCalendarItem(int image, String title, String date) {
+    public EventCalendarItem(Bitmap image, String title, String date) {
         this.image = image;
         this.title = title;
         this.date = date;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 

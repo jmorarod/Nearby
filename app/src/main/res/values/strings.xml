@@ -45,6 +45,9 @@
     <string name = "url_comentarios_listar">https://nearbyrestapi.herokuapp.com/restapi/api/comentarios/listar</string>
     <string name ="url_post_comentario">https://nearbyrestapi.herokuapp.com/restapi/api/comentarios/crear</string>
     <string name ="url_post_usuarioevento">https://nearbyrestapi.herokuapp.com/restapi/api/usuarioevento/crear</string>
+    <string name ="url_event_asistir">https://nearbyrestapi.herokuapp.com/restapi/api/usuarioevento/asistir</string>
+    <string name ="url_event_interesado">https://nearbyrestapi.herokuapp.com/restapi/api/usuarioevento/interesado</string>
+
 
 
 </resources>
