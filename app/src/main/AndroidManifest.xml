@@ -53,7 +53,7 @@
                 android:value="cr.ac.jmorarodic_itcr.nearby.MainActivity" />
         </activity>
         <activity
-            android:name=".RegistrarActivity"
+            android:name=".IndexActivity"
             android:label="@string/title_activity_registrar"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -62,7 +62,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cr.ac.jmorarodic_itcr.nearby.MainActivity" />
         </activity>
-        <activity android:name=".IndexActivity">
+        <activity android:name=".RegistrarActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
