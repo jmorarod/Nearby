@@ -85,7 +85,6 @@ public class InterestEventFragment extends Fragment {
         sharedPreferences = getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
         String user = sharedPreferences.getString("user", "2");
 
-        Log.i("Response","lkkjaskldjaslkdjlkjkls");
 
         try {
             jsonRequestBody.put("key", api_key);
