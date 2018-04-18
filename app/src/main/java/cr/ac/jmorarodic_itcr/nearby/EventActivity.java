@@ -49,6 +49,7 @@ public class EventActivity extends AppCompatActivity {
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
     StringRequest jsonRequest2;
+    String estado = "";
     private Map map = null;
     String api_key;
     private ArrayList<ComentarioItem> comentarios = new ArrayList<>();
@@ -66,6 +67,28 @@ public class EventActivity extends AppCompatActivity {
 
 
     }
+
+    public void onAsistirClick(View view) {
+        estado = "Asistir";
+        try {
+            jsonRequestBody.put("key", api_key);
+            postJsonEstado(jsonRequestBody, getString(R.string.url_post_usuarioevento));
+            cargarComentarios();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onInteresaClick(View view) {
+        estado = "Interesado";
+        try {
+            jsonRequestBody.put("key", api_key);
+            postJsonEstado(jsonRequestBody, getString(R.string.url_post_usuarioevento));
+            cargarComentarios();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void onMapClick(View view){
 
         Intent intent = new Intent(this,MapsActivity.class);
@@ -76,6 +99,8 @@ public class EventActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -296,6 +321,70 @@ public class EventActivity extends AppCompatActivity {
                 Log.i("User",user);
                 Log.i("EventoID",eventoID);
                 parameters.put("autor",user);
+                parameters.put("evento",eventoID);
+                return parameters;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest2);
+
+    }
+
+    public void postJsonEstado(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest2 = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Response",jsonObj.toString());
+                            jsonResponse2 = jsonObj;
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getParams() throws  AuthFailureError{
+                HashMap<String, String> parameters = new HashMap<String, String>();
+                EditText editText = findViewById(R.id.txtComment);
+                Log.i("Antes de contenido","Antes de contenido");
+                parameters.put("estado",estado);
+                Log.i("Contenido",editText.getText().toString());
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
+                String user = sharedPreferences.getString("user", "2");
+                Log.i("User",user);
+                Log.i("EventoID",eventoID);
+                parameters.put("usuario",user);
                 parameters.put("evento",eventoID);
                 return parameters;
             }
