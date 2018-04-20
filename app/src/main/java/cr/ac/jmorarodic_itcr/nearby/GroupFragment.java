@@ -187,6 +187,7 @@ public class GroupFragment extends Fragment {
                 JSONObject categoria = row.getJSONObject("categoria");
                 urls.add(categoria.getString("foto"));
                 categorias.add(categoria.getString("nombre"));
+                idCategorias.add(categoria.getString("id"));
             }
 
             for(int i = 0; i < urls.size(); i++){
@@ -204,6 +205,8 @@ public class GroupFragment extends Fragment {
                 bitmaps[i] = mbitmaps.get(i);
             }
             CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
+            adapterC.setActivity(getActivity());
+            adapterC.setListView2((ListView) getActivity().findViewById(R.id.listMainGroup));
             recyclerView.setAdapter(adapterC);
             adapterC.notifyDataSetChanged();
 

@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
 
         //Quitar comentario de la siguiente linea para quitar la sesión
-        sharedPreferences.edit().putBoolean("logged",false).apply();
+        //sharedPreferences.edit().putBoolean("logged",false).apply();
         if(sharedPreferences.getBoolean("logged",false)){
             Intent intent = new Intent(MainActivity.this,IndexActivity.class);
             startActivity(intent);

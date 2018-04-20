@@ -404,6 +404,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             editor.putString("user", userid).apply();
 
             Intent intent = new Intent(LoginActivity.this,IndexActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
 
 
