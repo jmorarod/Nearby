@@ -101,6 +101,9 @@
         <activity android:name=".NewEventActivity" />
         <activity android:name=".NewGroupActivity" />
         <activity android:name=".GroupActivity"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="26e094117f93cfda11b4d58f0ab29bcf017c3532" />
     </application>
 
 
