@@ -48,7 +48,7 @@ public class GroupFragment extends Fragment {
     ArrayList<String> categorias = new ArrayList<>();
     ArrayList<String> idCategorias = new ArrayList<>();
     ArrayList<EventItem> groupItems = new ArrayList<>();
-
+    CategorieMainAdapter adapterC;
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
@@ -204,7 +204,7 @@ public class GroupFragment extends Fragment {
                 mCategories[i] = categorias.get(i);
                 bitmaps[i] = mbitmaps.get(i);
             }
-            CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
+            adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
             adapterC.setActivity(getActivity());
             adapterC.setListView2((ListView) getActivity().findViewById(R.id.listMainGroup));
             recyclerView.setAdapter(adapterC);
@@ -242,4 +242,11 @@ public class GroupFragment extends Fragment {
         }
     }
 
+    public CategorieMainAdapter getAdapterC() {
+        return adapterC;
+    }
+
+    public void setAdapterC(CategorieMainAdapter adapterC) {
+        this.adapterC = adapterC;
+    }
 }

@@ -82,6 +82,7 @@ public class NewEventActivity extends AppCompatActivity {
             postJson(jsonRequestBody,getString(R.string.url_crear_evento));
 
 //            Log.i("json",jsonResponse.toString());
+            Toast.makeText(this,"Evento Agregado con éxito",Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

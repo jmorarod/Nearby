@@ -42,6 +42,13 @@ public class IndexActivity extends AppCompatActivity {
         intent.putExtra(CATEGORIA_MENSAJE,homeFragment.getCategorieMainAdapter().getCurrentCategorie());
         startActivity(intent);
     }
+
+    public void onClickAgregarGrupo(View view){
+        Intent intent = new Intent(getApplicationContext(),NewGroupActivity.class);
+        intent.putExtra("Categoria",groupFragment.getAdapterC().getCurrentCategorie());
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
