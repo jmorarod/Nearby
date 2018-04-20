@@ -47,10 +47,10 @@ public class GroupMainAdapter extends ArrayAdapter<GroupItem> {
 
             if(grupos.get(position)!=null)
             {
-                imageCategorie.setImageResource(grupos.get(position).getImageCategorie());
-                imageProfile.setImageResource(grupos.get(position).getImageProfile());
-                username.setText(grupos.get(position).getUsername());
-                stars.setText(grupos.get(position).getStars());
+                imageCategorie.setImageResource(R.drawable.photo);
+                imageProfile.setImageResource(R.drawable.profile_default);
+                username.setText("Username");
+                stars.setText("");
                 title.setText(grupos.get(position).getTitle());
                 descrip.setText(grupos.get(position).getDescription());
 

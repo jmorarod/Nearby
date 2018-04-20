@@ -47,6 +47,8 @@ public class GroupFragment extends Fragment {
     ArrayList<Bitmap> mbitmaps = new ArrayList<>();
     ArrayList<String> categorias = new ArrayList<>();
     ArrayList<String> idCategorias = new ArrayList<>();
+    ArrayList<EventItem> groupItems = new ArrayList<>();
+    CategorieMainAdapter adapterC;
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
@@ -63,6 +65,7 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View RootView = inflater.inflate(R.layout.fragment_group, container, false);
+        groupItems = new ArrayList<>();
 
 
         //Carga lista vertical categorias
@@ -92,6 +95,7 @@ public class GroupFragment extends Fragment {
 
         //Carga eventos disponibles
         //Solo son ejemplos de eventos
+        /*
         ArrayList<GroupItem> groupItems = new ArrayList<>();
         GroupItem g = new GroupItem("Username", "4.5", "Titulo 1" , "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
                 R.drawable.sports,R.drawable.profile_default);
@@ -107,11 +111,12 @@ public class GroupFragment extends Fragment {
                 R.drawable.technology,R.drawable.profile_default);
 
         groupItems.add(g);
-
+        */
         //Carga en listview
         final ListView listView = (ListView) RootView.findViewById(R.id.listMainGroup);
-        GroupMainAdapter groupMainAdapter = new GroupMainAdapter(getActivity().getApplicationContext(),R.layout.list_item_group_main,groupItems);
-        listView.setAdapter(groupMainAdapter);
+
+        //GroupMainAdapter groupMainAdapter = new GroupMainAdapter(getActivity().getApplicationContext(),R.layout.list_item_group_main,groupItems);
+        //listView.setAdapter(groupMainAdapter);
 
 
 
@@ -182,6 +187,7 @@ public class GroupFragment extends Fragment {
                 JSONObject categoria = row.getJSONObject("categoria");
                 urls.add(categoria.getString("foto"));
                 categorias.add(categoria.getString("nombre"));
+                idCategorias.add(categoria.getString("id"));
             }
 
             for(int i = 0; i < urls.size(); i++){
@@ -198,7 +204,9 @@ public class GroupFragment extends Fragment {
                 mCategories[i] = categorias.get(i);
                 bitmaps[i] = mbitmaps.get(i);
             }
-            CategorieMainAdapter adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
+            adapterC = new CategorieMainAdapter(mCategories,mImages,getActivity().getApplicationContext(),bitmaps,idCategorias);
+            adapterC.setActivity(getActivity());
+            adapterC.setListView2((ListView) getActivity().findViewById(R.id.listMainGroup));
             recyclerView.setAdapter(adapterC);
             adapterC.notifyDataSetChanged();
 
@@ -234,4 +242,11 @@ public class GroupFragment extends Fragment {
         }
     }
 
+    public CategorieMainAdapter getAdapterC() {
+        return adapterC;
+    }
+
+    public void setAdapterC(CategorieMainAdapter adapterC) {
+        this.adapterC = adapterC;
+    }
 }

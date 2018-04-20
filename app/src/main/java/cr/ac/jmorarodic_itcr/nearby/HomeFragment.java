@@ -37,6 +37,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +60,10 @@ import java.util.concurrent.ExecutionException;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
+
+    public static final String MIXPANEL_TOKEN = "45c9edecdaaee5bd3a8d47ce048daf02";
+
+
 
     ArrayList<Bitmap> mbitmaps = new ArrayList<>();
     ArrayList<String> categorias = new ArrayList<>();
@@ -89,6 +94,11 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         /* Inflate the layout for this fragment*/
 
+        MixpanelAPI mixp =
+                MixpanelAPI.getInstance(getActivity().getApplicationContext(), MIXPANEL_TOKEN);
+        mixp.track("On Resume", null);
+
+        mixp.flush();
         View RootView = inflater.inflate(R.layout.fragment_home, container, false);
         eventItems = new ArrayList<>();
         //Carga lista vertical categorias

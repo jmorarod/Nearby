@@ -27,18 +27,35 @@ public class IndexActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     public static final String CATEGORIA_MENSAJE = "com.example.myfirstapp.MESSAGE";
 
+    public void onClickImageExit(View view){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("auth_token","");
+        sharedPreferences.edit().putBoolean("logged",false);
+        sharedPreferences.edit().putString("user","");
+        Intent intent = new Intent(this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
     public void onClickAgregarEvento(View view){
         Intent intent = new Intent(getApplicationContext(),NewEventActivity.class);
         intent.putExtra(CATEGORIA_MENSAJE,homeFragment.getCategorieMainAdapter().getCurrentCategorie());
         startActivity(intent);
     }
+
+    public void onClickAgregarGrupo(View view){
+        Intent intent = new Intent(getApplicationContext(),NewGroupActivity.class);
+        intent.putExtra("Categoria",groupFragment.getAdapterC().getCurrentCategorie());
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         //TODO:quitar lo siguiente cuando esté el login
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString("auth_token","c7700bfe9c3e35e4cfa8dd60f356b0535304ebaf").apply();
+       // sharedPreferences.edit().putString("auth_token","c7700bfe9c3e35e4cfa8dd60f356b0535304ebaf").apply();
         Log.i("TestIndex","TEst");
         mainNav = (BottomNavigationView) findViewById(R.id.main_menu);
         mainFrame = (FrameLayout) findViewById(R.id.mainFrame);

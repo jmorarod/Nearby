@@ -16,6 +16,7 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto_thin"
             android:text="@string/TextSeleccioneCategorias"
             android:textColor="@color/colorBlack"
@@ -25,14 +26,18 @@
         <GridView
             android:id="@+id/gridViewCategorias"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
+            android:layout_height="400dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:numColumns="3" />
 
         <Button
             android:id="@+id/btnContinuar"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="200dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginTop="50dp"
             android:background="@color/colorPrimary"
             android:onClick="onClickContinuar"
             android:text="Continuar"

@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,11 +63,14 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
     JSONObject jsonResponse;
     JSONObject jsonRequestBody = new JSONObject();
     StringRequest jsonRequest;
+    StringRequest jsonRequest2;
     private String lat;
     private String lon;
     private Activity activity;
     private ListView listView;
+    private ListView listView2;
     private ArrayList<EventItem> eventItems;
+    private ArrayList<GroupItem> groupItems;
     public CategorieMainAdapter(String[] mCategories, Integer[] mImages, Context mContext, Bitmap[] mImagesBitmaps, ArrayList<String> mCategoriesID) {
         this.mCategories = mCategories;
         this.mImages = mImages;
@@ -92,24 +96,38 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
 
         holder.name.setText(mCategories[position]);
         //holder.image.setImageResource(mImages[position]);
-        holder.image.setImageBitmap(mImagesBitmaps[position]);
+        if(mImagesBitmaps.length!=0)
+            holder.image.setImageBitmap(mImagesBitmaps[position]);
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.i("onclickGroup","onClickGroup");
                 Toast.makeText(mContext, mCategories[position], Toast.LENGTH_SHORT).show();
-                currentCategorie = mCategoriesID.get(position);
-                eventItems = new ArrayList<>();
-                SharedPreferences sharedPreferences =  getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
-                String api_key = sharedPreferences.getString("auth_token","");
                 try {
+                    currentCategorie = mCategoriesID.get(position);
+                    eventItems = new ArrayList<>();
+                    groupItems = new ArrayList<>();
+                    Log.i("onclickGroup","Before Try");
+                    SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences", Context.MODE_PRIVATE);
+                    String api_key = sharedPreferences.getString("auth_token", "");
                     jsonRequestBody.put("key", api_key);
-                    getEventosJson(jsonRequestBody,getActivity().getString(R.string.url_evento_cerca)+"?latitud="+lat+"&longitud="+lon+"&categoria="+mCategories[Integer.parseInt(currentCategorie)-1]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        Log.i("onclickGroup","First Try");
+                        getEventosJson(jsonRequestBody, getActivity().getString(R.string.url_evento_cerca) + "?latitud=" + lat + "&longitud=" + lon + "&categoria=" + mCategories[Integer.parseInt(currentCategorie) - 1]);
+                    }catch (Exception ex){
+                        Log.i("ExceptionRVEventos",ex.toString());
+                    }
 
+                    try{
+                        Log.i("onclickGroup","Second Try");
+                        getGruposJson(jsonRequestBody, getActivity().getString(R.string.url_grupos_por_categoria) + "?categoria=" + mCategories[Integer.parseInt(currentCategorie) - 1]);
+                    }catch (Exception ex){
+                        Log.i("ExceptionRV",ex.toString());
+                    }
+                }catch (Exception ex){
+                    Log.i("onclickGroupGException",ex.toString());
+                }
 //
             }
         });
@@ -300,6 +318,114 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
 
     }
 
+
+    public void getGruposJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        Log.i("RequestGrupos","RequestGrupos");
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Response",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadGrupos(jsonResponse);
+
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+    public void loadGrupos(JSONObject jsonObject){
+        Bitmap bitmap;
+        jsonRequest.cancel();
+        final ArrayList<String> descripcionArray = new ArrayList<>();
+        final ArrayList<String> url = new ArrayList<>();
+        Log.i("LoadGrupos","LoadGrupos");
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                JSONObject row = jsonArray.getJSONObject(i);
+
+                String titulo = row.getString("descripcion");
+                String descripcion = row.getString("descripcion");
+                JSONArray arrayEventos = row.getJSONArray("eventosgrupo");
+
+                for(int j =0; j < arrayEventos.length(); j++){
+                    descripcionArray.add(arrayEventos.getJSONObject(j).getJSONObject("evento").getString("descripcion"));
+                    url.add(arrayEventos.getJSONObject(j).getJSONObject("evento").getString("imagen"));
+                    Log.i("URLGrupoEvento",url.get(i));
+                }
+
+                GroupItem g = new GroupItem(titulo, descripcion);
+                groupItems.add(g);
+            }
+
+
+            final GroupMainAdapter groupMainAdapter = new GroupMainAdapter(activity.getApplicationContext(),R.layout.list_item_categories_main,groupItems);
+            listView2.setAdapter(groupMainAdapter);
+            listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                    Intent intent = new Intent(activity.getApplicationContext(),GroupActivity.class);
+                    intent.putExtra("Titulo",groupItems.get(position).getTitle());
+
+                    String[] descripcionesStringArray = new String[descripcionArray.size()];
+                    String[] urlStringArray = new String[url.size()];
+                    for(int i = 0; i < url.size(); i++){
+                        descripcionesStringArray[i] = descripcionArray.get(i);
+                        urlStringArray[i] = url.get(i);
+                    }
+                    intent.putExtra("Descripcion",groupItems.get(position).getDescription());
+                    intent.putExtra("EventosDescripciones",descripcionesStringArray);
+                    intent.putExtra("EventosImagenes",urlStringArray);
+
+                    getActivity().startActivity(intent);
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public Activity getActivity() {
         return activity;
     }
@@ -322,5 +448,13 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
 
     public void setEventItems(ArrayList<EventItem> eventItems) {
         this.eventItems = eventItems;
+    }
+
+    public ListView getListView2() {
+        return listView2;
+    }
+
+    public void setListView2(ListView listView2) {
+        this.listView2 = listView2;
     }
 }

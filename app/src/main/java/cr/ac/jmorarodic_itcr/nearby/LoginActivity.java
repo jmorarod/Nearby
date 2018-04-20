@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,8 +32,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,6 +78,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    JSONObject jsonResponse;
+    JSONObject jsonRequestBody = new JSONObject();
+    StringRequest jsonRequest;
+    String api_key;
+    String userid;
+
+    boolean stateLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +223,193 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            login();
+        }
+    }
+
+    public boolean login()
+    {
+
+        SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        api_key = sharedPreferences.getString("auth_token","");
+        try {
+            jsonRequestBody.put("key",api_key);
+            postJson(jsonRequestBody,"https://nearbyrestapi.herokuapp.com/rest-auth/login/");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return stateLogin;
+    }
+
+    public void postJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",response);
+                            Log.i("Response API",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadApiKey(jsonResponse);
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> parameters = new HashMap<String, String>();
+
+                parameters.put("username", mEmailView.getText().toString());
+                parameters.put("email", mEmailView.getText().toString());
+                parameters.put("password", mPasswordView.getText().toString());
+
+
+                return parameters;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                headers.put("Content-Type", "application/json");
+                //headers.put("Authorization","Token "+jsonBody.getString("key"));
+
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+
+    void loadApiKey(JSONObject jsonObject)
+    {
+        jsonRequest.cancel();
+        ArrayList<String> response = new ArrayList<>();
+        try {
+            jsonObject = new JSONObject(jsonObject.getString("response"));
+            api_key = jsonObject.getString("key");
+            Log.i("JSON_API",api_key);
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+            editor.putString("auth_token",api_key).apply();
+
+
+            getUserid();
+            stateLogin=true;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getUserid()
+    {
+        SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+        api_key = sharedPreferences.getString("auth_token","");
+        try {
+            jsonRequestBody.put("key",api_key);
+            getJson(jsonRequestBody,("https://nearbyrestapi.herokuapp.com/restapi/api/usuarioactual?user="+api_key));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getJson(final JSONObject jsonBody, String url){
+        final JSONObject jsonObj = new JSONObject();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final String requestBody = jsonBody.toString();
+
+        jsonRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.i("Response",response);
+
+                        try {
+                            Log.i("Response","Writing Json");
+
+                            jsonObj.put("response",new JSONArray(response));
+                            Log.i("Response ID",jsonObj.toString());
+                            jsonResponse = jsonObj;
+                            loadUserid(jsonResponse);
+
+
+                        } catch (JSONException e) {
+                            Log.i("ResponseError",e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response",error.toString());
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Log.i("Response","GetHeaders");
+                HashMap<String, String> headers = new HashMap<String, String>();
+                try {
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization","Token "+jsonBody.getString("key"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return headers;
+            }
+
+        };
+        queue.add(jsonRequest);
+
+    }
+
+    public void loadUserid(JSONObject jsonObject)
+    {
+        jsonRequest.cancel();
+        ArrayList<String> response = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+
+            userid = ""+ jsonArray.getJSONObject(0).getInt("user");
+            Log.i("USER_ID",userid);
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString("user", userid).apply();
+
+            Intent intent = new Intent(LoginActivity.this,IndexActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -348,8 +558,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 SharedPreferences sharedPreferences =  getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",MODE_PRIVATE);
                 sharedPreferences.edit().putBoolean("logged",true).apply();
-                Intent intent = new Intent(LoginActivity.this,IndexActivity.class);
-                startActivity(intent);
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
