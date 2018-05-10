@@ -144,7 +144,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 parameters.put("nombre", txtName.getText().toString());
                 //parameters.put("lugar", txtLugar.getText().toString());
                 //parameters.put("descripcion",  txtDescripcion.getText().toString());
+
                 if(map != null) {
+                    Log.i("Foto",(String) map.get("secure_url"));
                     parameters.put("foto", (String) map.get("secure_url"));
                     Log.i("map not null",(String) map.get("secure_url"));
                 }

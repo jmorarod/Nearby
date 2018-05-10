@@ -78,6 +78,13 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
         this.mImagesBitmaps = mImagesBitmaps;
         this.mCategoriesID = mCategoriesID;
         currentCategorie = "1";
+
+        //try{
+        //    Log.i("onclickGroup","Second Try");
+        //    getGruposJson(jsonRequestBody, "https://nearbyrestapi.herokuapp.com/restapi/api/grupos/categoria" + "?categoria=" + "");
+        //}catch (Exception ex){
+        //    Log.i("ExceptionRV",ex.toString());
+        //}
     }
 
     @NonNull
@@ -105,6 +112,7 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
                 Log.i("onclickGroup","onClickGroup");
                 Toast.makeText(mContext, mCategories[position], Toast.LENGTH_SHORT).show();
                 try {
+                    String cat = mCategories[position];
                     currentCategorie = mCategoriesID.get(position);
                     eventItems = new ArrayList<>();
                     groupItems = new ArrayList<>();
@@ -114,14 +122,14 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
                     jsonRequestBody.put("key", api_key);
                     try {
                         Log.i("onclickGroup","First Try");
-                        getEventosJson(jsonRequestBody, getActivity().getString(R.string.url_evento_cerca) + "?latitud=" + lat + "&longitud=" + lon + "&categoria=" + mCategories[Integer.parseInt(currentCategorie) - 1]);
+                        getEventosJson(jsonRequestBody, getActivity().getString(R.string.url_evento_cerca) + "?latitud=" + lat + "&longitud=" + lon + "&categoria=" + cat);
                     }catch (Exception ex){
                         Log.i("ExceptionRVEventos",ex.toString());
                     }
 
                     try{
                         Log.i("onclickGroup","Second Try");
-                        getGruposJson(jsonRequestBody, getActivity().getString(R.string.url_grupos_por_categoria) + "?categoria=" + mCategories[Integer.parseInt(currentCategorie) - 1]);
+                        getGruposJson(jsonRequestBody, getActivity().getString(R.string.url_grupos_por_categoria) + "?categoria=" + cat);
                     }catch (Exception ex){
                         Log.i("ExceptionRV",ex.toString());
                     }
@@ -388,7 +396,7 @@ public class CategorieMainAdapter extends RecyclerView.Adapter<CategorieMainAdap
                 for(int j =0; j < arrayEventos.length(); j++){
                     descripcionArray.add(arrayEventos.getJSONObject(j).getJSONObject("evento").getString("descripcion"));
                     url.add(arrayEventos.getJSONObject(j).getJSONObject("evento").getString("imagen"));
-                    Log.i("URLGrupoEvento",url.get(i));
+                    //Log.i("URLGrupoEvento",url.get(i));
                 }
 
                 GroupItem g = new GroupItem(titulo, descripcion);

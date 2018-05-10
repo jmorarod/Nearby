@@ -27,16 +27,7 @@ public class IndexActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     public static final String CATEGORIA_MENSAJE = "com.example.myfirstapp.MESSAGE";
 
-    public void onClickImageExit(View view){
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString("auth_token","");
-        sharedPreferences.edit().putBoolean("logged",false);
-        sharedPreferences.edit().putString("user","");
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
+
     public void onClickAgregarEvento(View view){
         Intent intent = new Intent(getApplicationContext(),NewEventActivity.class);
         intent.putExtra(CATEGORIA_MENSAJE,homeFragment.getCategorieMainAdapter().getCurrentCategorie());
@@ -106,4 +97,16 @@ public class IndexActivity extends AppCompatActivity {
        fragmentTransaction.replace(R.id.mainFrame, fragment);
        fragmentTransaction.commit();
    }
+
+    public void onClickImageExit(View view){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("cr.ac.jmorarodic_itcr.nearby.sharedpreferences",Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("auth_token","");
+        sharedPreferences.edit().putBoolean("logged",false);
+        sharedPreferences.edit().putString("user","");
+        Log.i("TestIndex","askdjalkjlad");
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }
